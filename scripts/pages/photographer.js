@@ -1,3 +1,9 @@
+import {photographerTemplate} from  "../templates/photographer.js";
+import {mediaTemplate} from  "../templates/media.js";
+import {exportForm, displayModal, closeModal} from "../utils/contactForm.js";
+import {sortAndDisplayMedia, displayMedia} from "../utils/sortMedia.js";
+
+
 function getPhotographersId() {
   // Récupère la partie query de l'url (tout ce qui se trouve après le ?)
   const params = new URLSearchParams(window.location.search);
@@ -10,7 +16,7 @@ const photographerId = getPhotographersId();
 
 let mediaData = [];
 
-async function getPhotographerData(photographerId) {
+export async function getPhotographerData(photographerId) {
   try {
     // Récupère les informations du photographe et ses médias associés
     const response = await fetch("../../data/photographers.json");
@@ -56,53 +62,54 @@ counterLikeDiv.classList.add("counter_like_div");
 priceCounterLikeDiv.appendChild(counterLikeDiv);
 
 
-// Ajout d'une div mediaFiltre
-const mediaFiltre = document.createElement("div");
-mediaFiltre.classList.add("media-filtre");
-main.appendChild(mediaFiltre);
+// // Ajout d'une div mediaFiltre
+// const mediaFiltre = document.createElement("div");
+// mediaFiltre.classList.add("media-filtre");
+// main.appendChild(mediaFiltre);
 
-// Ajout du label
-const label = document.createElement("label");
-label.setAttribute("for", "mySelect");
-label.textContent = "Trier par ";
-label.classList.add("labelSelect")
+// // Ajout du label
+// const label = document.createElement("label");
+// label.setAttribute("for", "mySelect");
+// label.textContent = "Trier par ";
+// label.classList.add("labelSelect")
 
-// Ajout du select
-const select = document.createElement("select");
-select.setAttribute("id", "mySelect");
+// // Ajout du select
+// const select = document.createElement("select");
+// select.setAttribute("id", "mySelect");
 
-// Création des options dans un tableau
-const options = [
-    {text: "Popularité", value: "popularity"},
-    {text: "Date", value: "date"},
-    {text: "Titre", value: "title"}
-];
+// // Création des options dans un tableau
+// const options = [
+//     {text: "Popularité", value: "popularity"},
+//     {text: "Date", value: "date"},
+//     {text: "Titre", value: "title"}
+// ];
 
-// Ajout des options au select
-options.forEach(option => {
-    const optionElement = document.createElement("option");
-    optionElement.textContent = option.text;
-    optionElement.value = option.value;
-    select.appendChild(optionElement);
-});
+// // Ajout des options au select
+// options.forEach(option => {
+//     const optionElement = document.createElement("option");
+//     optionElement.textContent = option.text;
+//     optionElement.value = option.value;
+//     select.appendChild(optionElement);
+// });
 
-// Ajout du label et du select au conteneur mediaFiltre
-mediaFiltre.appendChild(label);
-mediaFiltre.appendChild(select);
+// // Ajout du label et du select au conteneur mediaFiltre
+// mediaFiltre.appendChild(label);
+// mediaFiltre.appendChild(select);
 
 
 
-// Ajout de l'écouteur d'événement pour détecter les changements de sélection
-select.addEventListener("change", () => {
-  const selectedValue = select.value;
-  sortAndDisplayMedia(selectedValue);
-});
+// // Ajout de l'écouteur d'événement pour détecter les changements de sélection
+// select.addEventListener("change", () => {
+//   const selectedValue = select.value;
+//   sortAndDisplayMedia(selectedValue);
+// });
 
 
 // Ajout d'une div media
 const media = document.createElement("div");
 media.classList.add("media");
 main.appendChild(media);
+
 
 // Ajout de la div lightboxModal
 const lightboxModal = document.createElement("div");
@@ -156,6 +163,7 @@ lightboxMedia.appendChild(lightboxCaption);
 
 
 
+
 // Récupère la promesse retournée par la fonction getPhotographerData
 getPhotographerData(photographerId).then((PhotographerData) => {
   if (PhotographerData && PhotographerData.photographer) {
@@ -190,8 +198,6 @@ getPhotographerData(photographerId).then((PhotographerData) => {
     const price = photographerCard.querySelector(".price");
     priceCounterLikeDiv.appendChild(price);
 
-
-
     parentElement.appendChild(photographerCard);
 
     // Afiche les médias associés au photographe
@@ -201,50 +207,40 @@ getPhotographerData(photographerId).then((PhotographerData) => {
 
       });
     }
-
-
   }
 });
 
-// const updateTotalLikes = (totalLikes) => {
-//   const totalLikesElement = document.createElement("span");
-//   totalLikesElement.classList.add("total-likes");
-//   if (totalLikesElement) {
-//     totalLikesElement.textContent = `${totalLikes}`;
+
+// function sortAndDisplayMedia(criteria) {
+//   let sortedData;
+
+//   // Utilisation d'un switch pour déterminer le critère de tri
+//   switch (criteria) {
+//     case "popularity":  //(nombre de likes décroissant)
+
+//       // Crée une copie du tableau mediaData pour éviter de modifier l'original
+//       sortedData = [...mediaData].sort((a, b) => b.likes - a.likes);
+//       break;
+//     case "date" :  //(du plus récent au plus ancien)
+//       sortedData = [...mediaData].sort((a, b) => new Date(b.date) - new Date(a.date));
+//       break;
+//     case "title" :  //(ordre alphabétique)
+//       sortedData = [...mediaData].sort((a, b) => {
+
+//         // Vérifie que a.title et b.title sont des chaînes de caractères
+//         if (typeof a.title === 'string' && typeof b.title === 'string') {
+//           return a.title.localeCompare(b.title);
+//         }
+//         // Si l'un des titres n'est pas une chaîne, retourne 0 (pas de changement d'ordre)
+//         return 0;
+//       });
+//       break;
+//     default :  // Utilise les données originales si le critère ne correspond à rien
+//     sortedData = mediaData;
 //   }
-// };
-
-
-function sortAndDisplayMedia(criteria) {
-  let sortedData;
-
-  // Utilisation d'un switch pour déterminer le critère de tri
-  switch (criteria) {
-    case "popularity":  //(nombre de likes décroissant)
-
-      // Crée une copie du tableau mediaData pour éviter de modifier l'original
-      sortedData = [...mediaData].sort((a, b) => b.likes - a.likes);
-      break;
-    case "date" :  //(du plus récent au plus ancien)
-      sortedData = [...mediaData].sort((a, b) => new Date(b.date) - new Date(a.date));
-      break;
-    case "title" :  //(ordre alphabétique)
-      sortedData = [...mediaData].sort((a, b) => {
-
-        // Vérifie que a.title et b.title sont des chaînes de caractères
-        if (typeof a.title === 'string' && typeof b.title === 'string') {
-          return a.title.localeCompare(b.title);
-        }
-        // Si l'un des titres n'est pas une chaîne, retourne 0 (pas de changement d'ordre)
-        return 0;
-      });
-      break;
-    default :  // Utilise les données originales si le critère ne correspond à rien
-    sortedData = mediaData;
-  }
-  // Affiche les médias triés
-  displayMedia(sortedData);
-}
+//   // Affiche les médias triés
+//   displayMedia(sortedData);
+// }
 
 function displayMedia(data) {
 
@@ -322,21 +318,10 @@ function manageMedia(mediaItem, index) {
 
 
 
-
-
-  // const mediaObject = mediaTemplate(mediaItem); // Récupère l'objet retourné par mediaTemplate
-
-  // // Appeler updateTotalLikes() sur l'objet mediaObject
-  // let totalLikes = mediaObject.updateTotalLikes();
-
-
-  // // Affichage dans la console pour vérifier
-  // console.log(totalLikes);
-
   // Initialise l'index sur 0
   let currentIndex = 0;
 
-  // Récupère les images et kes vidéos
+  // Récupère les images et les vidéos
   const mediaElements = document.querySelectorAll(".media-img, .media-video");
 
   // Ajout d'un écouteur d'événements à chaque images
@@ -397,3 +382,17 @@ function manageMedia(mediaItem, index) {
   }
 }
 
+
+// Ajout d'un écouteur d'évènement pour remplacer onclick
+const openModalButton = document.querySelector('.contact_button');
+openModalButton.addEventListener('click', displayModal);
+
+// Ajout d'un écouteur d'évènement pour remplacer onclick
+const closeButton = document.querySelector('.close_button');
+closeButton.addEventListener('click', closeModal);
+
+// Appel de la fonction exportForm
+exportForm();
+
+sortAndDisplayMedia();
+displayMedia();
