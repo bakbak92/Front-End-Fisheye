@@ -1,48 +1,46 @@
-export function sortAndDisplayMedia(criteria) {
+import {manageMedia} from "../pages/photographer.js";
+export function createMediaFiltre(allMedia) {
+  // Ajout d'une div mediaFiltre
+  const mediaFiltre = document.querySelector(".media-filtre");
 
-    // Ajout d'une div mediaFiltre
-    const mediaFiltre = document.createElement("div");
-    mediaFiltre.classList.add("media-filtre");
-    main.appendChild(mediaFiltre);
+  // Ajout du label
+  const label = document.createElement("label");
+  label.setAttribute("for", "mySelect");
+  label.textContent = "Trier par ";
+  label.classList.add("labelSelect")
 
-    // Ajout du label
-    const label = document.createElement("label");
-    label.setAttribute("for", "mySelect");
-    label.textContent = "Trier par ";
-    label.classList.add("labelSelect")
+  // Ajout du select
+  const select = document.createElement("select");
+  select.setAttribute("id", "mySelect");
 
-    // Ajout du select
-    const select = document.createElement("select");
-    select.setAttribute("id", "mySelect");
+  // Création des options dans un tableau
+  const options = [
+      {text: "Popularité", value: "popularity"},
+      {text: "Date", value: "date"},
+      {text: "Titre", value: "title"}
+  ];
 
-    // Création des options dans un tableau
-    const options = [
-        {text: "Popularité", value: "popularity"},
-        {text: "Date", value: "date"},
-        {text: "Titre", value: "title"}
-    ];
+  // Ajout des options au select
+  options.forEach(option => {
+      const optionElement = document.createElement("option");
+      optionElement.textContent = option.text;
+      optionElement.value = option.value;
+      select.appendChild(optionElement);
+  });
 
-    // Ajout des options au select
-    options.forEach(option => {
-        const optionElement = document.createElement("option");
-        optionElement.textContent = option.text;
-        optionElement.value = option.value;
-        select.appendChild(optionElement);
-    });
+  // Ajout du label et du select au conteneur mediaFiltre
+  mediaFiltre.appendChild(label);
+  mediaFiltre.appendChild(select);
 
-    // Ajout du label et du select au conteneur mediaFiltre
-    mediaFiltre.appendChild(label);
-    mediaFiltre.appendChild(select);
-
-
-
-    // Ajout de l'écouteur d'événement pour détecter les changements de sélection
-    select.addEventListener("change", () => {
+  select.addEventListener("change", () => {
     const selectedValue = select.value;
-    sortAndDisplayMedia(selectedValue);
-    });
+    sortAndDisplayMedia(allMedia, selectedValue);
+  });
+}
 
-    let mediaData = [];
+export function sortAndDisplayMedia(allMedia, criteria) {
+
+    let mediaData = allMedia;
 
     let sortedData;
   
