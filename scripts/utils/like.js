@@ -54,4 +54,22 @@ export function handleLike(mediaCard, index) {
         isClicked = true;
         }
     });
+    fullHeart.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            if (!isClicked) {
+                // Récupère la valeur actuelle
+                let currentLikes = parseInt(likesText.textContent, 10); 
+        
+                // Incrémente
+                currentLikes++;
+        
+                // Met à jour l'affichage
+                likesText.textContent = currentLikes;
+        
+                // Met à jour le total général
+                updateTotalLikes();
+                isClicked = true;
+            }
+        }
+    });
 }

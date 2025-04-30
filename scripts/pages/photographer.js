@@ -186,6 +186,12 @@ export function manageMedia(mediaItem, index) {
   // Ajout d'un écouteur d'événements à chaque images
   mediaElements.forEach(media => {
     media.addEventListener("click", openLightbox);
+    media.addEventListener("keydown", (e) => {
+      console.log(e.key);
+      if (e.key === "Enter") {
+        openLightbox(e);
+      }
+    });
   });
 
   // Ajout d'un écouter d'évènements
@@ -223,6 +229,20 @@ export function manageMedia(mediaItem, index) {
 
     updateLightboxMedia(clickedMedia);
     lightboxModal.style.display = "flex";
+    // Ajouter un écouteur d'événements pour les touches du clavier
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        navigateLightbox({target: {id: "chevronLeft"}});
+      }
+      if (e.key === "ArrowRight") {
+        navigateLightbox({target: {id: "chevronRight"}});
+      }
+      if (e.key === "Escape") {
+        closeLightbox();
+      }
+    });
+
+
   }
 
   function navigateLightbox(event) {
@@ -238,6 +258,17 @@ export function manageMedia(mediaItem, index) {
 
   function closeLightbox() {
     lightboxModal.style.display = "none";
+    document.removeEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        navigateLightbox({target: {id: "chevronLeft"}});
+      }
+      if (e.key === "ArrowRight") {
+        navigateLightbox({target: {id: "chevronRight"}});
+      } 
+      if (e.key === "Escape") {
+        closeLightbox();
+      }
+    });
   }
 }
 

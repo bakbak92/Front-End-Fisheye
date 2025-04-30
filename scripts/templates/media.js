@@ -24,6 +24,7 @@ export function mediaTemplate(data) {
     imageElement.setAttribute("alt", `${title}`)
     imageElement.setAttribute("data-index", index);
     imageElement.classList.add("media-img");
+    imageElement.setAttribute("tabindex", 0);
     article.appendChild(imageElement);
     } else if (video){
       const videoElement = document.createElement("video");
@@ -32,6 +33,7 @@ export function mediaTemplate(data) {
       videoElement.setAttribute("controls", "true");
       videoElement.setAttribute("data-index", index);
       videoElement.classList.add("media-video");
+      videoElement.setAttribute("tabindex", 0);
       article.appendChild(videoElement);
     }
 
@@ -57,7 +59,7 @@ export function mediaTemplate(data) {
 
     const fullHeart = document.createElement("i");
     fullHeart.classList.add("fa-solid", "fa-heart");
-
+    fullHeart.setAttribute("tabindex", 0);
     p1.appendChild(fullHeart);
 
     article.appendChild(h2);
